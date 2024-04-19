@@ -12,10 +12,9 @@ export default function LoginForm() {
           key={provider.id}
           action={(formData) => {
             if (provider.id !== "creadentials") {
-              authenticate(
-                String(provider.id),
-                "https://localhost:3000/ui/inside"
-              );
+              authenticate(String(provider.id));
+            } else {
+              authenticate(provider.id, formData);
             }
           }}
         >

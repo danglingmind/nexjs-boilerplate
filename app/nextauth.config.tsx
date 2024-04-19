@@ -19,17 +19,26 @@ export const authConfig = {
     signIn: "/login",
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      console.log(auth);
+    async authorized({ auth, request: { nextUrl } }) {
+      console.log("authorized");
       const isLoggedIn = !!auth?.user;
-      const isInside = nextUrl.pathname.startsWith("/ui/inside");
-      if (isInside) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/ui/inside", nextUrl));
+
+      const unprotectedPaths = ["/login"];
+
+      const isProtected = !unprotectedPaths.some((path) =>
+        nextUrl.pathname.startsWith(path)
+      );
+
+      if (isProtected && !isLoggedIn) {
+        const redirectUrl = new URL("/login", nextUrl.origin);
+        redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
+        return Response.redirect(redirectUrl);
       }
+
       return true;
+    },
+    redirect({ url, baseUrl }) {
+      return "/ui/inside";
     },
   },
   providers: providers,
