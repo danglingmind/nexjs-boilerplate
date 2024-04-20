@@ -1,13 +1,16 @@
 "use server";
 import { AuthError } from "next-auth";
-import { signIn } from "@/app/auth";
+import { signIn, signOut } from "@/auth";
 
 export async function authenticate(
   providerId: string | undefined,
-  formData?: FormData
+  redirectTo?: string
+  //   formData?: FormData
 ) {
   try {
-    await signIn(providerId, formData);
+    redirectTo
+      ? await signIn(providerId, { redirectTo: redirectTo })
+      : await signIn(providerId);
   } catch (error) {
     if (error instanceof AuthError) {
       return "Something went wrong during login.";
