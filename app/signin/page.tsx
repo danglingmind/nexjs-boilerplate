@@ -12,7 +12,7 @@ export default async function SignInPage() {
             await signIn(provider.id, { redirectTo: "/signout" });
           }}
         >
-          <button type="submit">
+          <button type="submit" className="btn btn-primary bg-blue">
             <span>Sign in with {provider.name}</span>
           </button>
         </form>
