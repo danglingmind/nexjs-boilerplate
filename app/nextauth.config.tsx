@@ -3,29 +3,28 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import CustomPrismaAdapter from "@/prisma/customAdapter";
+import prisma from "./lib/db";
+// import CustomPrismaAdapter from "@/prisma/customAdapter";
 
 export const providers: Provider[] = [GithubProvider({}), GoogleProvider({})];
 
-const prisma = new PrismaClient();
 export const authConfig = {
-  //   pages: {
-  //     signIn: "/signin",
-  //     error: "/error/auth",
-  //   },
-  adapter: CustomPrismaAdapter(prisma),
+  pages: {
+    //   signIn: "/signin",
+    // error: "/error/auth",
+  },
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
   //   basePath: "/auth",
   callbacks: {
-    signIn({ user, account, profile }) {
-      console.log("user", user);
-      console.log("profile", profile);
-      console.log("account", account);
-      return Promise.resolve(true);
-    },
+    //     signIn({ user, account, profile }) {
+    //       console.log("user", user);
+    //       console.log("profile", profile);
+    //       console.log("account", account);
+    //       return Promise.resolve(true);
+    //     },
     //     jwt({ token, trigger, session }) {
     //       if (trigger === "update") token.name = session?.user?.name;
     //       return token;
