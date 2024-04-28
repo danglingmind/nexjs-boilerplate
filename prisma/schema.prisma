@@ -85,3 +85,59 @@ model Authenticator {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Board {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  Description   String?
+  Themes        Theme[]
+  Active        Boolean
+  Tags          Tag[]
+  EmbedLink     String?
+  Testimonial   Testimonial? @relation(fields: [testimonialId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testimonialId String?      @db.ObjectId
+}
+
+model Testimonial {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  Name              String?
+  Description       String?
+  Tags              Tag[]
+  Theme             Theme           @relation(fields: [themeId], references: [id])
+  isForm            Boolean
+  Active            Boolean
+  Boards            Board[]
+  PermissionToShare Boolean?
+  ImageUploaded     Boolean?
+  VideoUploaded     Boolean?
+  ImageLink         String?
+  VideoLink         String?
+  UserEmail         String
+  SocialAccounts    SocialAccount[]
+  Verified          Boolean?
+
+  themeId String @db.ObjectId
+}
+
+model Theme {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  Board       Board?        @relation(fields: [boardId], references: [id])
+  boardId     String?       @db.ObjectId
+  Testimonial Testimonial[]
+}
+
+model Tag {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  Board         Board?       @relation(fields: [boardId], references: [id])
+  boardId       String?      @db.ObjectId
+  Testimonial   Testimonial? @relation(fields: [testimonialId], references: [id])
+  testimonialId String?      @db.ObjectId
+}
+
+model SocialAccount {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  Plateform     String
+  Url           String
+  Testimonial   Testimonial? @relation(fields: [testimonialId], references: [id])
+  testimonialId String?      @db.ObjectId
+}
